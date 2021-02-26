@@ -86,7 +86,8 @@ let main = function main(){
                 break;
             }
             dataY.push(y+(this.world.ball.y/10))
-            dataX.push(this.roundB(i))
+            dataX.push(this.roundC(t))
+            // dataX.push(this.roundB(i))
         }
         console.log({dataX,dataY})
         this.view.data.X = dataX
