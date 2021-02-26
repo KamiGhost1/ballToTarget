@@ -17,10 +17,6 @@ let main = function main(){
             let s = (target.x-ball.x)/10
             let h = (target.y-ball.y)/10
             let min = this.round(this.toDeg(this.alphaMin(h,s)))
-            if(alpha<min){
-                alert('alpha < min alpha')
-                return false
-            }
             let a = {
                 alpha,
                 v,
@@ -86,6 +82,9 @@ let main = function main(){
         for(let i = 0;i<=s;i+=0.1){
             t = this.round(this.calculateTime(i,alpha,obj.v))
             y = this.roundC(this.round(await this.calculateHeight(t,obj.v,alpha,obj.g)))
+            if(y<-2){
+                break;
+            }
             dataY.push(y+(this.world.ball.y/10))
             dataX.push(this.roundB(i))
         }
