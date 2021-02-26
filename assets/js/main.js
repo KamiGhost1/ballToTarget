@@ -24,6 +24,7 @@ let main = function main(){
                 g:g
             }
             await this.traccert(a)
+            await this.checkCompare()
             this.render()
         })
         document.getElementById('searchBtn').addEventListener('click',async ()=>{
@@ -34,6 +35,7 @@ let main = function main(){
                 console.log(el)
                 return el
             }))
+            await this.checkCompare()
             this.render()
         })
     }
@@ -57,10 +59,10 @@ let main = function main(){
             let t = ''
             let H = ''
             console.log({s,h,min,g})
-            for(let i = min;i<90;i+=0.05){
-                t = this.round(await this.calculateTime(s,i,v))
+            for(let i = min;i<90;i+=0.1){
+                t = this.roundC(this.round(await this.calculateTime(s,i,v)))
                 H = this.roundC(this.round(await this.calculateHeight(t,v,i,g)))
-                // console.log({i, t, H})
+                console.log({i, t, H})
                 if(H === h){
                     console.log({H})
                     resolve({alpha:i,s,h,v,g})
@@ -80,7 +82,7 @@ let main = function main(){
         let y = ''
         let t = ''
         for(let i = 0;i<=s;i+=0.1){
-            t = this.round(this.calculateTime(i,alpha,obj.v))
+            t = this.roundC(this.round(this.calculateTime(i,alpha,obj.v)))
             y = this.roundC(this.round(await this.calculateHeight(t,obj.v,alpha,obj.g)))
             if(y<-2){
                 break;
@@ -92,6 +94,30 @@ let main = function main(){
         console.log({dataX,dataY})
         this.view.data.X = dataX
         this.view.data.Y = dataY
+    }
+
+    this.checkCompare = function(){
+        let dataX = this.view.data.X
+        let dataY = this.view.data.Y
+        let tmpX = []
+        let tmpY = []
+        // console.log(dataX.length)
+        if(dataX.length>1){
+            for(let i = 0;i<dataX.length;i++){
+                if(i===0){
+                    tmpX.push(dataX[i])
+                    tmpY.push(dataY[i])
+                }
+                if(dataY[i]===dataY[i-1]){
+
+                }else{
+                    tmpX.push(dataX[i])
+                    tmpY.push(dataY[i])
+                }
+            }
+            this.view.data.X = tmpX
+            this.view.data.Y = tmpY
+        }
     }
 
     this.view ={
@@ -122,7 +148,7 @@ let main = function main(){
             x:target.x || 100,
             y:target.y || 40
         }
-        world.g = gravity || 10
+        world.g = gravity || 9.8
         this.world = world
     }
     this.toRad = function (deg){
@@ -135,7 +161,7 @@ let main = function main(){
         return S/v*Math.cos(this.toRad(alpha))
     }
     this.calculateHeight = function (t, v, alpha, g){
-        return v*t*Math.sin(this.toRad(alpha)) - g*t*t/2
+        return v*t*Math.sin(this.toRad(alpha)) - (g*t*t)/2
     }
     this.alphaMin = function (h, s){
         return Math.atan2(h,s)
