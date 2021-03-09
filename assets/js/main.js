@@ -31,7 +31,7 @@ let main = function main(){
             let v = Number(document.getElementById('v').value)
             console.log({v})
             await this.traccert(await this.search(v).then(el=>{
-                alert('вииии, я нашел угол: '+el.alpha)
+                alert('нашел угол: '+el.alpha)
                 console.log(el)
                 return el
             }))
